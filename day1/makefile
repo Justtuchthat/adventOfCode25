@@ -1,2 +1,4 @@
-all: main.c
-	gcc main.c
+all: star1
+
+star1: star1.c
+	gcc star1.c -o star1
