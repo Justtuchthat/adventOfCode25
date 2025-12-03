@@ -6,13 +6,13 @@
 #define BATTERYSIZE 12
 
 int getDigit() {
-    return getchar() - '0';
+    return getchar() - '0'; // Returns the number that represents the read digit
 }
 
 unsigned long makeNum(int* num) {
     long res = num[0];
     for (int i = 1; i < BATTERYSIZE; i++) {
-        res *= 10;
+        res *= 10; // Multiply number by 10, then add new digit to calculate number represented by array
         res += num[i];
     }
     return res;
@@ -20,49 +20,49 @@ unsigned long makeNum(int* num) {
 
 void readBank(int* bank) {
     for (int i = 0; i < BANKSIZE; i++) {
-        bank[i] = getDigit();
+        bank[i] = getDigit(); // Read BANKSIZE amount of digits to read a bank fully
     }
 }
 
 int rightBigger(int* left, int* right) {
     for (int i = 0; i < BATTERYSIZE; i++) {
-        if (right[i] > left[i]) return 1;
-        if (right[i] < left[i]) return 0;
+        if (right[i] > left[i]) return 1; // If right battery is bigger, return true
+        if (right[i] < left[i]) return 0; // If right battery is smaller, return false
     }
-    return 0;
+    return 0; // Left and right battery are equal, thus right is not bigger
 }
 
 void copy(int* toCopy, int* copyInto) {
     for (int i = 0; i < BATTERYSIZE; i++) {
-        copyInto[i] = toCopy[i];
+        copyInto[i] = toCopy[i]; // Copies battery from toCopy to copyInto
     }
 }
 
 int* removeElem(int* new, int* num, int idx, int newdigit) {
     int newidx = 0;
     for (int i = 0; i < BATTERYSIZE; i++) {
-        if (i == idx) continue;
+        if (i == idx) continue; // If removing idx is reached, skip it
         new[newidx] = num[i];
-        newidx++;
+        newidx++; // Increase pasting index only when not removing idx is copied
     }
-    new[BATTERYSIZE-1] = newdigit;
+    new[BATTERYSIZE-1] = newdigit; // Insert new digit in last place
 }
 
 unsigned long processBank(int* bank) {
     int num[BATTERYSIZE] = {0};
-    copy(bank, num);
-    for (int nextIdx = BATTERYSIZE; nextIdx < BANKSIZE; nextIdx++) {
+    copy(bank, num); // Copy the first 12 digits of bank to battery
+    for (int nextIdx = BATTERYSIZE; nextIdx < BANKSIZE; nextIdx++) { // Loop over all other digits
         int nextDigit = bank[nextIdx];
-        int biggest[BATTERYSIZE] = {0};
-        copy(num, biggest);
-        for (int i = 0; i < BATTERYSIZE; i++) {
+        int biggest[BATTERYSIZE] = {0}; // Using extra battery to not change num in the middle of calculations
+        copy(num, biggest); // Create copy of battery for storing largest possible battery with new digit
+        for (int i = 0; i < BATTERYSIZE; i++) { // Loop over all digits in battery to see if removing any of them creates a bigger battery
             int new[BATTERYSIZE] = {0};
-            removeElem(new, num, i, nextDigit);
-            if (rightBigger(biggest, new)) {
+            removeElem(new, num, i, nextDigit); // Remove ith digit from current battery and add newest digit in the end
+            if (rightBigger(biggest, new)) { // If it is bigger than current num, store result in biggest
                 copy(new, biggest);
             }
         }
-        copy(biggest, num);
+        copy(biggest, num); // Copy biggest back into num
     }
     return makeNum(num);
 }
@@ -71,7 +71,7 @@ int main() {
     int bank[BANKSIZE] = {0};
     readBank(bank);
     unsigned long joltSum = processBank(bank);
-    while (getchar() != EOF) {
+    while (getchar() != EOF) { // Continue until EOF is reached
         readBank(bank);
         joltSum += processBank(bank);
     }
