@@ -61,12 +61,6 @@ void compressRange(Range* list) {
     compressRange(list->next);
 }
 
-void printRange(Range* list) {
-    if (list == NULL) return;
-    printf("%lu-%lu\n", list->start, list->end);
-    printRange(list->next);
-}
-
 Freshness checkIfFresh(Range* list, unsigned long id) {
     if (list == NULL) return SPOILED;
     if (id < list->start) return SPOILED;
